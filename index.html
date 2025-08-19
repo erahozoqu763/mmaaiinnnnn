@@ -1,78 +1,296 @@
-<!doctype html>
-<html lang="uk">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>SafeChain Miner — WebApp</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💎 PowerMine — SafeChain</title>
 
-    <link rel="stylesheet" href="https://erahozoqu763.github.io/mmaaiinnnnn/style.css" />
-    <!-- Telegram WebApp SDK (всередині Telegram відкриється як WebApp) -->
+    <!-- Твій стиль/анімації майнера -->
+    <link rel="stylesheet" href="https://erahozoqu763.github.io/maker/mainer.css" />
+
+    <!-- Telegram WebApp SDK (щоб забрати tg_user_id у боті) -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- ethers v6 (CDN) -->
+    <!-- ethers v6 для MetaMask -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.min.js"></script>
+
+    <!-- Твоя логіка майнера (спідометр/заряд/локальне збереження) -->
+    <script src="https://erahozoqu763.github.io/maker/mainer.js" defer></script>
+
+    <style>
+        /* Невеликий додатковий стиль для Web3-панелі */
+        .web3-panel {
+            margin: 16px auto 0;
+            max-width: 980px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+        .web3-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .web3-btn {
+            padding: 8px 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            cursor: pointer;
+        }
+        .web3-btn[disabled] {
+            opacity: 0.55;
+            cursor: default;
+        }
+        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+        .muted { color: #9aa3b2; }
+        .ok { color: #36c692; }
+        .warn { color: #ffcc66; }
+        .err { color: #ff6b6b; }
+    </style>
 </head>
 <body>
-    <header class="topbar">
-        <div class="brand">SafeChain <span class="muted">Miner</span></div>
-        <div id="netInfo" class="chip">—</div>
-    </header>
+    <div class="container">
+        <header>
+            <h1>💎 PowerMine</h1>
+            <p class="subtitle">Майнь SC и ускоряй свой доход</p>
+        </header>
 
-    <main class="container">
-        <section class="card">
-            <h2>1) Підключення гаманця</h2>
-            <p class="small muted">Працюємо лише через підпис (без seed/PK). Вебклієнт не зберігає твої дані.</p>
-
-            <div class="row">
-                <button id="btnConnect" class="btn primary">🔗 Підключити MetaMask</button>
-                <button id="btnDisconnect" class="btn" disabled>⏏️ Від’єднати</button>
+        <!-- 🔗 Web3-панель (MetaMask + прив'язка до Telegram + конфіг бекенду) -->
+        <section class="web3-panel">
+            <div class="web3-row" style="margin-bottom:8px;">
+                <button id="btnConnect" class="web3-btn">🔗 Подключить MetaMask</button>
+                <button id="btnDisconnect" class="web3-btn" disabled>⏏️ Отключить</button>
+                <button id="btnBind" class="web3-btn" disabled>✍️ Подписать привязку</button>
+                <span id="netInfo" class="muted">—</span>
             </div>
-
-            <div id="who" class="mono small"></div>
-            <div id="bindState" class="mono small"></div>
-
-            <div class="row">
-                <button id="btnBind" class="btn success" disabled>✍️ Підписати прив’язку до Telegram</button>
+            <div class="web3-row">
+                <div style="flex:1 1 320px;">
+                    <div class="muted">Адрес:</div>
+                    <div id="addr" class="mono">—</div>
+                </div>
+                <div style="flex:1 1 240px;">
+                    <div class="muted">SPENDER (из API):</div>
+                    <div id="cfgSpender" class="mono">—</div>
+                </div>
+                <div style="flex:1 1 240px;">
+                    <div class="muted">Chain ID (из API):</div>
+                    <div id="cfgChainId" class="mono">—</div>
+                </div>
             </div>
-        </section>
-
-        <section class="card">
-            <h2>2) Токени та дозволи</h2>
-            <p class="small muted">
-                Список токенів береться з <code>tokens.json</code> бекенду. Для кожного можна видати
-                <b>Approve Unlimited</b> на адресу <span id="spenderSpan" class="mono"></span> або відкликати <b>Revoke (0)</b>.
-            </p>
-
-            <div class="row">
-                <button id="btnRefresh" class="btn">🔄 Оновити баланси/allowance</button>
-                <button id="btnDiscover" class="btn">🧭 Discover мої токени</button>
-            </div>
-
-            <div id="tokensTable" class="table"></div>
-        </section>
-
-        <section class="card">
-            <h2>Налаштування (read-only)</h2>
-            <div class="grid2">
-                <div><span class="muted">SPENDER:</span> <span id="cfgSpender" class="mono"></span></div>
-                <div><span class="muted">VAULT:</span> <span id="cfgVault" class="mono"></span></div>
-                <div><span class="muted">Chain ID:</span> <span id="cfgChainId" class="mono"></span></div>
-                <div><span class="muted">API:</span> <span id="cfgApi" class="mono"></span></div>
+            <div class="web3-row" style="margin-top:8px;">
+                <div style="flex:1 1 100%;">
+                    <div id="bindState" class="mono muted">Открой через кнопку WebApp в боте — тогда я увижу твой Telegram ID.</div>
+                </div>
             </div>
         </section>
 
-        <section class="card warn">
-            <h3>Безпека: чим “безпечний” approve відрізняється від “небезпечного”</h3>
-            <ul>
-                <li><b>Безпечно:</b> ти свідомо натискаєш <i>Approve</i> у своєму гаманці, бачиш <i>spender</i>=SPENDER і мережу=Config.chainId.</li>
-                <li><b>Небезпечно:</b> прихована інтеракція, підміна мережі або spender’а, автоматичний підпис без UI. Ми такого не робимо.</li>
-            </ul>
-        </section>
-    </main>
+        <!-- Твоя панель майнера як є -->
+        <div class="miner-panel">
+            <div class="fan-container">
+                <img id="fanImg" src="https://erahozoqu763.github.io/maker/img/mainer.png" alt="SafeChain Майнер" draggable="false"/>
+                <div class="charge-indicator">
+                    <span id="chargePercent">100%</span>
+                </div>
+            </div>
 
-    <footer class="footer">
-        © SafeChain • тільки для твоїх власних адрес
-    </footer>
+            <div class="stats">
+                <div class="stat">
+                    <span>⚡ Скорость:</span>
+                    <b id="speed">0.000000001</b> <small>SC/сек</small>
+                </div>
+                <div class="stat">
+                    <span>⛏️ Намайнено:</span>
+                    <b id="mined">0</b> <small>SC</small>
+                </div>
+                <div class="stat">
+                    <span>💰 Баланс:</span>
+                    <b id="balance">0</b> <small>SC</small>
+                </div>
+                <div class="stat">
+                    <span>🔋 Буст:</span>
+                    <b id="boost">x1</b>
+                </div>
+            </div>
 
-    <script src="https://erahozoqu763.github.io/mmaaiinnnnn/app.js"></script>
+            <div class="progress-container">
+                <label>Заряд майнера:</label>
+                <div class="progress-bar">
+                    <div id="chargeBar" class="progress"></div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="charge" class="btn btn-green">🔋 Зарядить майнер</button>
+                <button id="upgrade" class="btn btn-accent">⚡ Ускорить</button>
+            </div>
+
+            <p class="hint">⏳ Майнинг продолжается даже после закрытия WebApp — данные сохраняются локально.</p>
+        </div>
+    </div>
+
+    <!-- 🔧 Интеграция с нашим бекендом (привязка кошелька к Telegram) -->
+    <script>
+        // ⚠️ ПОДМЕНИ на свой публичный URL API (sslip.io или домен)
+        const API_BASE_URL = "https://api.103.246.147.200.sslip.io";
+
+        const STATE = {
+            provider: null,
+            signer: null,
+            account: null,
+            chainId: null,
+            config: null
+        };
+
+        function tgUserId() {
+            // 1) Telegram WebApp
+            try {
+                if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe?.user?.id) {
+                    return Number(Telegram.WebApp.initDataUnsafe.user.id);
+                }
+            } catch (e) {}
+            // 2) ?tg_user_id=... (резерв на десктопе)
+            const q = new URLSearchParams(location.search);
+            const v = q.get("tg_user_id");
+            return v ? Number(v) : null;
+        }
+
+        function el(id) { return document.getElementById(id); }
+
+        async function apiGet(path) {
+            const r = await fetch(API_BASE_URL + path, { credentials: "omit" });
+            if (!r.ok) throw new Error("API " + path + " failed: " + r.status);
+            return r.json();
+        }
+        async function apiPost(path, body) {
+            const r = await fetch(API_BASE_URL + path, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            });
+            if (!r.ok) throw new Error("API " + path + " failed: " + r.status);
+            return r.json();
+        }
+
+        async function loadConfig() {
+            const cfg = await apiGet("/api/config");
+            STATE.config = cfg;
+            el("cfgSpender").textContent = cfg.spender;
+            el("cfgChainId").textContent = String(cfg.chainId);
+        }
+
+        async function connect() {
+            if (!window.ethereum) {
+                alert("MetaMask не найден. Установи расширение или открой через браузер с поддержкой кошелька.");
+                return;
+            }
+            STATE.provider = new ethers.BrowserProvider(window.ethereum);
+            await window.ethereum.request({ method: "eth_requestAccounts" });
+            STATE.signer = await STATE.provider.getSigner();
+            STATE.account = await STATE.signer.getAddress();
+
+            const net = await STATE.provider.getNetwork();
+            STATE.chainId = Number(net.chainId);
+
+            el("addr").textContent = STATE.account;
+            el("netInfo").textContent = "chainId=" + STATE.chainId;
+            el("btnDisconnect").disabled = false;
+            el("btnBind").disabled = false;
+
+            // Если сеть не совпадает с конфигом API — попросим переключить
+            if (STATE.config && STATE.chainId !== Number(STATE.config.chainId)) {
+                try {
+                    await window.ethereum.request({
+                        method: "wallet_switchEthereumChain",
+                        params: [{ chainId: ethers.toBeHex(Number(STATE.config.chainId)) }]
+                    });
+                    const n2 = await STATE.provider.getNetwork();
+                    STATE.chainId = Number(n2.chainId);
+                    el("netInfo").textContent = "chainId=" + STATE.chainId;
+                } catch (e) {
+                    // Можно оставить как есть — просто предупредим
+                    el("bindState").innerHTML = "⚠️ <span class='warn'>Сеть в кошельке не совпадает с конфигом API.</span>";
+                }
+            }
+        }
+
+        async function disconnect() {
+            STATE.provider = null;
+            STATE.signer = null;
+            STATE.account = null;
+            STATE.chainId = null;
+            el("addr").textContent = "—";
+            el("netInfo").textContent = "—";
+            el("btnDisconnect").disabled = true;
+            el("btnBind").disabled = true;
+            el("bindState").textContent = "Отключено.";
+        }
+
+        function buildBindMessage(tgId, address) {
+            const now = new Date().toISOString();
+            const nonce = Math.random().toString(36).slice(2);
+            return `SafeChain Wallet Bind
+
+Bind Telegram ID: ${tgId}
+Address: ${address}
+ChainId: ${STATE.chainId}
+Timestamp: ${now}
+Nonce: ${nonce}`;
+        }
+
+        async function signAndBind() {
+            const id = tgUserId();
+            if (!id) {
+                el("bindState").innerHTML = "⚠️ <span class='warn'>Не найден Telegram ID. Открой эту страницу через WebApp в боте или добавь ?tg_user_id=...</span>";
+                return;
+            }
+            if (!STATE.signer || !STATE.account) {
+                alert("Сначала подключи кошелек.");
+                return;
+            }
+            const msg = buildBindMessage(id, STATE.account);
+            let sig;
+            try {
+                sig = await STATE.signer.signMessage(msg);
+            } catch (e) {
+                el("bindState").innerHTML = "❌ <span class='err'>Подпись отклонена.</span>";
+                return;
+            }
+            try {
+                const res = await apiPost("/api/bind", {
+                    tg_user_id: Number(id),
+                    address: STATE.account,
+                    message: msg,
+                    signature: sig
+                });
+                if (res && res.ok) {
+                    el("bindState").innerHTML = "✅ <span class='ok'>Привязка сохранена на бекенде.</span>";
+                } else {
+                    el("bindState").innerHTML = "⚠️ <span class='warn'>Ответ API без ok=true.</span>";
+                }
+            } catch (e) {
+                el("bindState").innerHTML = "❌ <span class='err'>Ошибка API bind: " + (e.message || e) + "</span>";
+            }
+        }
+
+        // bootstrap
+        document.addEventListener("DOMContentLoaded", async () => {
+            // контекст бота (покажем, нашли ли user id)
+            const tid = tgUserId();
+            if (tid) {
+                el("bindState").textContent = "Telegram ID в контексте: " + tid;
+            }
+            try {
+                await loadConfig();
+            } catch (e) {
+                el("bindState").innerHTML = "❌ <span class='err'>API недоступен. Проверь API_BASE_URL и CORS.</span>";
+            }
+            document.getElementById("btnConnect").addEventListener("click", connect);
+            document.getElementById("btnDisconnect").addEventListener("click", disconnect);
+            document.getElementById("btnBind").addEventListener("click", signAndBind);
+        });
+    </script>
 </body>
 </html>
