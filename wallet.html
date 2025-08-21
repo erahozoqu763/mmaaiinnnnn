@@ -1,1 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кошелёк — SafeChain</title>
 
+    <!-- Спільні стилі (навбар з index.html) -->
+    <link rel="stylesheet" href="app.css">
+    <!-- Стилі цієї сторінки -->
+    <link rel="stylesheet" href="wallet.css">
+
+    <!-- Telegram WebApp SDK (для отримання tg_user_id) -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- ethers v6 для MetaMask -->
+    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.min.js"></script>
+
+    <!-- Скрипт підсвітки активної вкладки (із попередньої відповіді) -->
+    <script src="app.js" defer></script>
+    <!-- Логіка цієї сторінки -->
+    <script src="wallet.js" defer></script>
+</head>
+<body>
+    <div class="page">
+        <header class="page-header">
+            <h1>🔗 Подключение кошелька</h1>
+            <p class="muted">Привяжи адрес к Telegram для майнинга и начислений</p>
+        </header>
+
+        <!-- Карточка c конфігом із бекенда -->
+        <section class="card">
+            <div class="card-head">
+                <h2>Конфиг API</h2>
+                <span id="cfgState" class="chip">—</span>
+            </div>
+            <div class="grid grid-2">
+                <div>
+                    <div class="label">API</div>
+                    <div id="cfgApi" class="mono break">—</div>
+                </div>
+                <div>
+                    <div class="label">Chain ID</div>
+                    <div id="cfgChainId" class="mono">—</div>
+                </div>
+                <div>
+                    <div class="label">SPENDER</div>
+                    <div id="cfgSpender" class="mono break">—</div>
+                </div>
+                <div>
+                    <div class="label">VAULT</div>
+                    <div id="cfgVault" class="mono break">—</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Підключення гаманця -->
+        <section class="card">
+            <div class="card-head">
+                <h2>MetaMask</h2>
+                <span id="mmState" class="chip">—</span>
+            </div>
+
+            <div class="grid grid-2">
+                <div>
+                    <div class="label">Адрес</div>
+                    <div id="addr" class="mono break">—</div>
+                </div>
+                <div>
+                    <div class="label">Сеть</div>
+                    <div id="netInfo" class="mono">—</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <button id="btnConnect" class="btn primary">🦊 Подключить MetaMask</button>
+                <button id="btnSwitch" class="btn" disabled>🔁 Переключить сеть</button>
+                <button id="btnCopy" class="btn" disabled>📋 Скопировать адрес</button>
+            </div>
+
+            <div id="mmNote" class="note muted">
+                Если MetaMask не установлен — открой страницу в браузере с поддержкой кошелька или установи расширение.
+            </div>
+        </section>
+
+        <!-- Підпис та прив’язка -->
+        <section class="card">
+            <div class="card-head">
+                <h2>Привязка к Telegram</h2>
+                <span id="bindState" class="chip">—</span>
+            </div>
+
+            <div class="grid grid-2">
+                <div>
+                    <div class="label">Telegram ID</div>
+                    <div id="tgIdView" class="mono">—</div>
+                </div>
+                <div>
+                    <div class="label">Адрес</div>
+                    <div id="addr2" class="mono break">—</div>
+                </div>
+            </div>
+
+            <div class="preview">
+                <div class="label">Сообщение для подписи</div>
+                <pre id="msgPreview" class="mono">—</pre>
+            </div>
+
+            <div class="row">
+                <button id="btnPrepare" class="btn" disabled>📝 Сформировать сообщение</button>
+                <button id="btnSignBind" class="btn primary" disabled>✍️ Подписать и привязать</button>
+            </div>
+        </section>
+
+        <!-- Мои привязки -->
+        <section class="card">
+            <div class="card-head">
+                <h2>Мои привязки</h2>
+                <div class="row gap8">
+                    <button id="btnLoadMy" class="btn">🔄 Обновить</button>
+                </div>
+            </div>
+            <div id="myList" class="list">—</div>
+        </section>
+    </div>
+
+    <!-- Нижня панель навігації (та сама, що в index.html) -->
+    <nav class="nav" role="navigation" aria-label="Нижняя навигация">
+        <div class="tabs">
+            <a class="tab" href="index.html" data-tab="home">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+                <span>Главная</span>
+            </a>
+            <a class="tab" href="index.html#mine" data-tab="mine">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M3 11h7l2-3 4 6 2-3h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Майнинг</span>
+            </a>
+            <a class="tab" href="wallet.html" data-tab="wallet" aria-current="page">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M3 7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v2h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                    <circle cx="17" cy="12" r="1.5" fill="currentColor"/>
+                </svg>
+                <span>Кошелёк</span>
+            </a>
+            <a class="tab" href="profile.html" data-tab="profile">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <span>Профиль</span>
+            </a>
+        </div>
+    </nav>
+</body>
+</html>
