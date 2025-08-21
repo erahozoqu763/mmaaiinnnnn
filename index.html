@@ -1,132 +1,13 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💎 PowerMine — SafeChain</title>
-
-    <!-- Твой стиль/анимации майнера -->
-    <link rel="stylesheet" href="https://erahozoqu763.github.io/maker/mainer.css" />
-
-    <!-- Telegram WebApp SDK (для получения tg_user_id в боте) -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- ethers v6 для MetaMask -->
-    <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.min.js"></script>
-
-    <!-- Визуал майнера (скорость/заряд/локальное сохранение) -->
+    <link rel="stylesheet" href="https://erahozoqu763.github.io/maker/mainer.css">
+    <link rel="stylesheet" href="app.css">
     <script src="https://erahozoqu763.github.io/maker/mainer.js" defer></script>
-
-    <style>
-        /* ===== Верхняя панель ===== */
-        .web3-topbar {
-            max-width: 980px;
-            margin: 16px auto 0;
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .web3-btn {
-            padding: 8px 12px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.2);
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            cursor: pointer;
-        }
-        .web3-btn[disabled] { opacity: 0.55; cursor: default; }
-        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
-        .muted { color: #9aa3b2; }
-        .ok { color: #36c692; }
-        .warn { color: #ffcc66; }
-        .err { color: #ff6b6b; }
-
-        /* ===== Bottom-sheet (Hamster style) ===== */
-        .sheet-backdrop {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.55);
-            display: none;
-            z-index: 1000;
-        }
-        .sheet-backdrop.show { display: block; }
-        .sheet {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: 0;
-            width: min(720px, 100%);
-            max-height: 88vh;
-            background: #121621;
-            border: 1px solid #1f2537;
-            border-radius: 16px 16px 0 0;
-            box-shadow: 0 -20px 50px rgba(0,0,0,0.35);
-            display: grid;
-            grid-template-rows: auto auto 1fr auto;
-            animation: slideUp .22s ease-out;
-        }
-        @keyframes slideUp {
-            from { transform: translate(-50%, 18px); opacity: .95; }
-            to   { transform: translate(-50%, 0);    opacity: 1; }
-        }
-        .sheet-header { position: relative; padding: 10px 16px 6px; }
-        .sheet-handle {
-            width: 44px; height: 4px; border-radius: 999px;
-            margin: 4px auto 8px; background: #2b3146;
-        }
-        .sheet-title { font-weight: 700; text-align: center; }
-        .sheet-close {
-            position: absolute; right: 10px; top: 8px;
-            background: transparent; border: 0; color: #fff; font-size: 1.2rem; cursor: pointer;
-        }
-
-        .sheet-subhead {
-            padding: 0 16px 8px;
-            display: grid; gap: 6px;
-            border-bottom: 1px solid #1b2031;
-        }
-        .step-dots { display: flex; gap: 6px; justify-content: center; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; background: #2e3550; }
-        .dot.active { background: #7c9cff; }
-        .small { font-size: .9rem; }
-
-        .sheet-body { padding: 12px 16px; overflow: auto; }
-        .sheet-footer {
-            display: flex; gap: 8px; justify-content: space-between; align-items: center;
-            padding: 12px 16px;
-            border-top: 1px solid #1b2031;
-            background: linear-gradient(to top, rgba(10,12,18,0.9), rgba(10,12,18,0.65));
-            position: sticky; bottom: 0;
-        }
-
-        /* Внутренние элементы в модалке */
-        .card { background: #151a28; border: 1px solid #212943; border-radius: 14px; padding: 12px; }
-        .row-between { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-        .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .grid2 .span2 { grid-column: span 2; }
-        .badge {
-            background: #1e2438; color: #9aa3b2; padding: 6px 10px; border-radius: 999px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-        }
-        .state { margin-top: 8px; }
-
-        .btn {
-            border: 1px solid #2a3043; background: #24293a; color: #fff;
-            padding: 12px 14px; border-radius: 12px; cursor: pointer;
-        }
-        .btn:hover { filter: brightness(1.05); }
-        .btn.primary {
-            background: linear-gradient(180deg, #6e8dff, #637dff);
-            border-color: #6b83ff;
-            font-weight: 700;
-        }
-        .btn.ghost { background: transparent; border-color: #2a3043; }
-
-        /* Блок предпросмотра */
-        .confirm {
-            margin-top: 10px; padding: 10px; border-radius: 10px;
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-        }
-    </style>
+    <script src="app.js" defer></script>
 </head>
 <body>
     <div class="container">
@@ -135,16 +16,9 @@
             <p class="subtitle">Майнь SC и ускоряй свой доход</p>
         </header>
 
-        <!-- Верхняя панель: кнопка вызывает bottom-sheet -->
-        <div class="web3-topbar">
-            <button id="btnOpenModal" class="web3-btn">🔗 Подключить кошелёк</button>
-            <span id="miniState" class="muted">—</span>
-        </div>
-
-        <!-- Панель майнера (как в твоём макете) -->
         <div class="miner-panel">
             <div class="fan-container">
-                <img id="fanImg" src="https://erahozoqu763.github.io/maker/img/mainer.png" alt="SafeChain Майнер" draggable="false" />
+                <img id="fanImg" src="https://erahozoqu763.github.io/maker/img/mainer.png" alt="SafeChain Майнер" draggable="false"/>
                 <div class="charge-indicator">
                     <span id="chargePercent">100%</span>
                 </div>
@@ -185,281 +59,36 @@
         </div>
     </div>
 
-    <!-- 🔳 Bottom Sheet (только подключение и подпись привязки) -->
-    <div id="sheetWrap" class="sheet-backdrop" aria-hidden="true">
-        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
-            <header class="sheet-header">
-                <div class="sheet-handle"></div>
-                <div class="sheet-title" id="sheetTitle">Привязка кошелька</div>
-                <button id="sheetClose" class="sheet-close" aria-label="Закрыть">✕</button>
-            </header>
-
-            <div class="sheet-subhead">
-                <div class="step-dots">
-                    <span id="dot1" class="dot active"></span>
-                    <span id="dot2" class="dot"></span>
-                </div>
-                <div class="muted small" id="sheetHint">Шаг 1 из 2 — MetaMask</div>
-            </div>
-
-            <main class="sheet-body">
-                <!-- STEP 1: Connect -->
-                <section id="step1">
-                    <div class="card">
-                        <div class="row-between">
-                            <div>
-                                <div class="muted">Адрес</div>
-                                <div id="addr" class="mono">—</div>
-                            </div>
-                            <div class="badge" id="netInfo">chainId: —</div>
-                        </div>
-                        <div class="grid2" style="margin-top:10px;">
-                            <div>
-                                <div class="muted">SPENDER</div>
-                                <div id="cfgSpender" class="mono">—</div>
-                            </div>
-                            <div>
-                                <div class="muted">Chain ID (из API)</div>
-                                <div id="cfgChainId" class="mono">—</div>
-                            </div>
-                            <div class="span2">
-                                <div class="muted">API</div>
-                                <div id="cfgApi" class="mono">—</div>
-                            </div>
-                        </div>
-                        <div id="state1" class="state muted mono">—</div>
-                    </div>
-                </section>
-
-                <!-- STEP 2: Bind (sign) -->
-                <section id="step2" style="display:none;">
-                    <div class="card">
-                        <div class="grid2">
-                            <div>
-                                <div class="muted">Telegram ID</div>
-                                <div id="tgIdView" class="mono">—</div>
-                            </div>
-                            <div>
-                                <div class="muted">Адрес</div>
-                                <div class="mono" id="addr2">—</div>
-                            </div>
-                        </div>
-                        <div class="confirm">
-                            <div class="muted">Предпросмотр сообщения</div>
-                            <pre id="msgPreview" class="mono" style="white-space:pre-wrap;margin:6px 0 0;">—</pre>
-                        </div>
-                        <div id="bindState" class="state muted mono">—</div>
-                    </div>
-                </section>
-            </main>
-
-            <footer class="sheet-footer">
-                <button id="sheetBack" class="btn ghost" style="display:none;">← Назад</button>
-                <button id="sheetCTA" class="btn primary">🔗 Подключить MetaMask</button>
-            </footer>
+    <!-- Нижняя панель навигации -->
+    <nav class="nav" role="navigation" aria-label="Нижняя навигация">
+        <div class="tabs">
+            <a class="tab" href="index.html" data-tab="home" aria-current="page">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+                <span>Главная</span>
+            </a>
+            <a class="tab" href="index.html#mine" data-tab="mine">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M3 11h7l2-3 4 6 2-3h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Майнинг</span>
+            </a>
+            <a class="tab" href="wallet.html" data-tab="wallet">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M3 7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v2h1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-1v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                    <circle cx="17" cy="12" r="1.5" fill="currentColor"/>
+                </svg>
+                <span>Кошелёк</span>
+            </a>
+            <a class="tab" href="profile.html" data-tab="profile">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Z" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M4 20a8 8 0 0 1 16 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                <span>Профиль</span>
+            </a>
         </div>
-    </div>
-
-    <script>
-        /* ===== Настройки ===== */
-        const API_BASE_URL = "https://api.103.246.147.200.sslip.io"; // ← ПОДМЕНИ НА СВОЙ ПУБЛИЧНЫЙ API URL
-
-        /* ===== Состояние ===== */
-        const STATE = {
-            provider: null,
-            signer: null,
-            account: null,
-            chainId: null,
-            config: null
-        };
-
-        /* ===== Утилиты DOM ===== */
-        function $(id) { return document.getElementById(id); }
-        function setDots(n) {
-            [1,2].forEach(i => $("dot"+i).classList.toggle("active", i === n));
-            $("sheetHint").textContent = (n === 1) ? "Шаг 1 из 2 — MetaMask" : "Шаг 2 из 2 — Подпись привязки";
-        }
-        function showStep(n) {
-            $("step1").style.display = (n === 1) ? "block" : "none";
-            $("step2").style.display = (n === 2) ? "block" : "none";
-            $("sheetBack").style.display = (n === 2) ? "inline-block" : "none";
-            const cta = $("sheetCTA");
-            cta.textContent = (n === 1)
-                ? (STATE.account ? "Далее →" : "🔗 Подключить MetaMask")
-                : "✍️ Подписать и привязать";
-            setDots(n);
-        }
-        function openSheet() {
-            $("sheetWrap").classList.add("show");
-            $("sheetWrap").setAttribute("aria-hidden","false");
-            showStep(1);
-        }
-        function closeSheet() {
-            $("sheetWrap").classList.remove("show");
-            $("sheetWrap").setAttribute("aria-hidden","true");
-        }
-
-        /* ===== API ===== */
-        async function apiGet(path, params = null) {
-            const url = new URL(API_BASE_URL + path);
-            if (params) Object.entries(params).forEach(([k,v]) => url.searchParams.set(k, v));
-            const r = await fetch(url.toString(), { credentials: "omit" });
-            if (!r.ok) throw new Error("API " + path + " failed: " + r.status);
-            return r.json();
-        }
-        async function apiPost(path, body = {}) {
-            const r = await fetch(API_BASE_URL + path, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            });
-            if (!r.ok) throw new Error("API " + path + " failed: " + r.status);
-            return r.json();
-        }
-
-        /* ===== Telegram ID ===== */
-        function tgUserId() {
-            try {
-                if (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe?.user?.id) {
-                    return Number(Telegram.WebApp.initDataUnsafe.user.id);
-                }
-            } catch (_) {}
-            const q = new URLSearchParams(location.search);
-            const v = q.get("tg_user_id");
-            return v ? Number(v) : null;
-        }
-
-        /* ===== Конфиг с бэка ===== */
-        async function loadConfig() {
-            const cfg = await apiGet("/api/config");
-            STATE.config = cfg;
-            $("cfgSpender").textContent = cfg.spender;
-            $("cfgChainId").textContent = String(cfg.chainId);
-            $("cfgApi").textContent = API_BASE_URL;
-        }
-
-        /* ===== MetaMask connect ===== */
-        async function connect() {
-            if (!window.ethereum) {
-                alert("MetaMask не найден. Установи расширение или открой в браузере с поддержкой кошелька.");
-                return;
-            }
-            STATE.provider = new ethers.BrowserProvider(window.ethereum);
-            await window.ethereum.request({ method: "eth_requestAccounts" });
-            STATE.signer = await STATE.provider.getSigner();
-            STATE.account = await STATE.signer.getAddress();
-            const net = await STATE.provider.getNetwork();
-            STATE.chainId = Number(net.chainId);
-
-            $("addr").textContent = STATE.account;
-            $("netInfo").textContent = "chainId=" + STATE.chainId;
-            $("state1").textContent = "✅ Подключено. Убедись, что сеть совпадает с Chain ID из API.";
-            $("miniState").textContent = "Подключено: " + STATE.account.slice(0,6) + "…" + STATE.account.slice(-4);
-
-            // Авто-переключение сети при несовпадении
-            if (STATE.config && STATE.chainId !== Number(STATE.config.chainId)) {
-                try {
-                    await window.ethereum.request({
-                        method: "wallet_switchEthereumChain",
-                        params: [{ chainId: ethers.toBeHex(Number(STATE.config.chainId)) }],
-                    });
-                    const n2 = await STATE.provider.getNetwork();
-                    STATE.chainId = Number(n2.chainId);
-                    $("netInfo").textContent = "chainId=" + STATE.chainId;
-                } catch (e) {
-                    $("state1").innerHTML = "⚠️ <span class='warn'>Сеть кошелька не совпадает с конфигом. Можно продолжить, но транзакции могут не пройти.</span>";
-                }
-            }
-        }
-
-        /* ===== Сообщение для привязки (SIWE-like) ===== */
-        function buildBindMessage(tgId, address) {
-            const now = new Date().toISOString();
-            const nonce = Math.random().toString(36).slice(2);
-            return `SafeChain Wallet Bind
-
-Bind Telegram ID: ${tgId}
-Address: ${address}
-ChainId: ${STATE.chainId}
-Timestamp: ${now}
-Nonce: ${nonce}`;
-        }
-
-        async function prepareStep2() {
-            const id = tgUserId();
-            $("tgIdView").textContent = id ? String(id) : "—";
-            $("addr2").textContent = STATE.account || "—";
-
-            if (!STATE.account || !id) {
-                $("bindState").textContent = "Требуется подключенный кошелёк и Telegram ID (открой через WebApp в боте).";
-                return;
-            }
-            const msg = buildBindMessage(id, STATE.account);
-            $("msgPreview").textContent = msg;
-            $("bindState").textContent = "Готов к подписи.";
-        }
-
-        async function signAndBind() {
-            const id = tgUserId();
-            if (!id) { $("bindState").innerHTML = "⚠️ <span class='warn'>Не найден Telegram ID.</span>"; return; }
-            if (!STATE.signer || !STATE.account) { alert("Сначала подключи кошелёк."); return; }
-
-            const msg = buildBindMessage(id, STATE.account);
-            let sig;
-            try {
-                sig = await STATE.signer.signMessage(msg);
-            } catch {
-                $("bindState").innerHTML = "❌ <span class='err'>Подпись отклонена.</span>";
-                return;
-            }
-            try {
-                const res = await apiPost("/api/bind", {
-                    tg_user_id: Number(id),
-                    address: STATE.account,
-                    message: msg,
-                    signature: sig
-                });
-                if (res && res.ok) {
-                    $("bindState").innerHTML = "✅ <span class='ok'>Привязка сохранена.</span>";
-                    setTimeout(closeSheet, 700);
-                } else {
-                    $("bindState").innerHTML = "⚠️ <span class='warn'>Ответ API без ok=true.</span>";
-                }
-            } catch (e) {
-                $("bindState").innerHTML = "❌ <span class='err'>Ошибка API bind: " + (e.message || e) + "</span>";
-            }
-        }
-
-        /* ===== Bootstrap / события ===== */
-        document.addEventListener("DOMContentLoaded", async () => {
-            // Загрузим конфиг сразу
-            try { await loadConfig(); } catch { /* покажем позже в UI */ }
-
-            // Инфо о запуске
-            const id = tgUserId();
-            $("miniState").textContent = id
-                ? ("Открыто из Telegram WebApp • ID " + id)
-                : "Открой через кнопку WebApp в боте (или добавь ?tg_user_id=...)";
-
-            // Открытие/закрытие модалки
-            $("btnOpenModal").addEventListener("click", openSheet);
-            $("sheetClose").addEventListener("click", closeSheet);
-            $("sheetWrap").addEventListener("click", (e) => {
-                if (e.target.id === "sheetWrap") closeSheet();
-            });
-            $("sheetBack").addEventListener("click", () => showStep(1));
-
-            // Главная CTA логика
-            $("sheetCTA").addEventListener("click", async () => {
-                if ($("step1").style.display !== "none") {
-                    if (!STATE.account) await connect();
-                    showStep(2);
-                    await prepareStep2();
-                } else {
-                    await signAndBind();
-                }
-            });
-        });
-    </script>
+    </nav>
 </body>
 </html>
