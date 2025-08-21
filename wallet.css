@@ -1,1 +1,141 @@
+:root {
+    --bg: #0b0f18;
+    --card: #111522;
+    --line: #1f2537;
+    --muted: #9aa3b2;
+    --text: #ffffff;
+    --ok: #36c692;
+    --warn: #ffcc66;
+    --err: #ff6b6b;
+    --accent: #6e8dff;
+}
 
+body {
+    color: var(--text);
+    background: var(--bg);
+}
+
+/* контейнер сторінки */
+.page {
+    max-width: 980px;
+    margin: 16px auto calc(var(--nav-h) + 16px);
+    padding: 0 14px;
+}
+
+.page-header {
+    margin: 8px 0 14px;
+}
+.page-header h1 {
+    margin: 0 0 6px;
+}
+.muted { color: var(--muted); }
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+.break { word-break: break-all; }
+
+/* карточки */
+.card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+.card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.card-head h2 { margin: 0; font-size: 1.05rem; }
+
+/* сітки */
+.grid {
+    display: grid;
+    gap: 10px;
+}
+.grid-2 {
+    grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 700px) {
+    .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* дрібні елементи */
+.label {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+.chip {
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+.chip.ok { color: var(--ok); border-color: rgba(54,198,146,0.35); }
+.chip.warn { color: var(--warn); border-color: rgba(255,204,102,0.35); }
+.chip.err { color: var(--err); border-color: rgba(255,107,107,0.35); }
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.row.gap8 { gap: 8px; }
+
+/* кнопки */
+.btn {
+    border: 1px solid #2a3043;
+    background: #24293a;
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn:hover { filter: brightness(1.04); }
+.btn:disabled { opacity: 0.6; cursor: default; }
+.btn.primary {
+    background: linear-gradient(180deg, #6e8dff, #637dff);
+    border-color: #6b83ff;
+}
+
+/* примітка */
+.note {
+    margin-top: 10px;
+    font-size: 0.95rem;
+}
+
+/* прев’ю повідомлення */
+.preview {
+    margin-top: 10px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    padding: 8px;
+}
+.preview pre {
+    margin: 6px 0 0;
+    white-space: pre-wrap;
+}
+
+/* список моїх прив’язок */
+.list {
+    display: grid;
+    gap: 8px;
+}
+.item {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    background: #0f1422;
+}
+.item .t {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
