@@ -1,1 +1,64 @@
+:root {
+    --bg: #0b0f18;
+    --line: #1f2537;
+    --muted: #9aa3b2;
+    --text: #ffffff;
+    --nav-h: 72px;
+}
 
+/* додаємо відступ під навігацію */
+html, body {
+    height: 100%;
+}
+body {
+    padding-bottom: var(--nav-h);
+    color: var(--text);
+    background: var(--bg);
+}
+
+/* нижня панель */
+.nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--nav-h);
+    background: rgba(10, 12, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--line);
+    z-index: 100;
+}
+
+.tabs {
+    max-width: 980px;
+    margin: 0 auto;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.tab svg {
+    width: 22px;
+    height: 22px;
+}
+
+.tab.active,
+.tab[aria-current="page"] {
+    color: #ffffff;
+}
+
+.tab:active {
+    transform: translateY(1px);
+}
