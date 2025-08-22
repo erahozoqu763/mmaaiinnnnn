@@ -1,1 +1,64 @@
+.wrap {
+    max-width: 980px;
+    margin: 18px auto;
+    padding: 0 16px;
+}
 
+.page-head h1 {
+    margin: 0 0 4px;
+}
+.page-head .sub {
+    margin: 0 0 16px;
+    color: #9aa3b2;
+}
+
+.card {
+    background: #151a28;
+    border: 1px solid #212943;
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn {
+    border: 1px solid #2a3043;
+    background: #24293a;
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+.btn:hover {
+    filter: brightness(1.05);
+}
+.btn.primary {
+    background: linear-gradient(180deg, #6e8dff, #637dff);
+    border-color: #6b83ff;
+    font-weight: 700;
+}
+.btn[disabled] {
+    opacity: .55;
+    cursor: default;
+}
+
+.status {
+    margin-top: 10px;
+    color: #9aa3b2;
+}
+
+.tips {
+    margin-top: 16px;
+    color: #9aa3b2;
+}
+.tips code {
+    background: #1b2236;
+    border: 1px solid #26304b;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
