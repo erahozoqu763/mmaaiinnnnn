@@ -1,52 +1,226 @@
-:root {
-    --bg: #0b0f18;
-    --line: #1f2537;
-    --muted: #9aa3b2;
-    --text: #ffffff;
-    --nav-h: 72px;
+/* ==========================================================================
+   Base / Reset
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-/* додаємо відступ під навігацію */
 html, body {
     height: 100%;
 }
-body {
-    padding-bottom: var(--nav-h);
-    color: var(--text);
-    background: var(--bg);
+
+:root {
+    /* Кольори теми */
+    --bg: #0e1320;
+    --elev-1: #151a28;
+    --elev-2: #1b2236;
+    --stroke-1: #212943;
+    --stroke-2: #1e2637;
+    --text: #e8ecf7;
+    --muted: #9aa3b2;
+    --brand: #6b83ff;
+    --brand-2: #637dff;
+    --ok: #36c692;
+    --warn: #ffcc66;
+    --err: #ff6b6b;
 }
 
-/* нижня панель */
+body {
+    margin: 0;
+    padding: 0 0 92px; /* відступ знизу, щоб контент не ховався під навігацією */
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+.muted {
+    color: var(--muted);
+}
+
+/* ==========================================================================
+   Layout helpers
+   ========================================================================== */
+
+.container,
+.wrap {
+    max-width: 980px;
+    margin: 18px auto;
+    padding: 0 16px;
+}
+
+.page-head h1 {
+    margin: 0 0 6px;
+    font-weight: 700;
+}
+
+.page-head .sub,
+.subtitle {
+    margin: 0 0 16px;
+    color: var(--muted);
+}
+
+/* Карточки / блоки */
+.card {
+    background: var(--elev-1);
+    border: 1px solid var(--stroke-1);
+    border-radius: 14px;
+    padding: 14px;
+}
+
+.card + .card {
+    margin-top: 12px;
+}
+
+.card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: var(--elev-2);
+    border: 1px solid #26304b;
+    color: var(--muted);
+}
+
+/* Рядки / гріди */
+.row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.grid {
+    display: grid;
+    gap: 10px;
+}
+
+.grid-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Кнопки */
+.btn {
+    border: 1px solid #2a3043;
+    background: #24293a;
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: filter .15s ease, opacity .15s ease;
+}
+
+.btn:hover {
+    filter: brightness(1.05);
+}
+
+.btn.primary {
+    background: linear-gradient(180deg, var(--brand), var(--brand-2));
+    border-color: var(--brand);
+    font-weight: 700;
+}
+
+.btn[disabled] {
+    opacity: .55;
+    cursor: default;
+}
+
+/* Текстові підказки / статуси */
+.status {
+    margin-top: 10px;
+    color: var(--muted);
+}
+
+.tips {
+    margin-top: 16px;
+    color: var(--muted);
+}
+
+.tips code {
+    background: var(--elev-2);
+    border: 1px solid #26304b;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+
+/* Допоміжні */
+.break {
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+.label {
+    font-size: .92rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+
+/* ==========================================================================
+   Нижня навігація (було у nav.css)
+   ========================================================================== */
+
 .nav {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
-    height: var(--nav-h);
-    background: rgba(10, 12, 18, 0.85);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--line);
-    z-index: 100;
+    z-index: 50;
+    background: rgba(13, 18, 32, 0.92);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid var(--stroke-2);
 }
 
 .tabs {
-    max-width: 980px;
-    margin: 0 auto;
-    height: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
+    height: 68px;
+    max-width: 980px;
+    margin: 0 auto;
 }
 
 .tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: grid;
+    align-content: center;
+    justify-items: center;
     gap: 6px;
     color: var(--muted);
     text-decoration: none;
-    font-size: 0.85rem;
-    -webkit-tap-highlight-color: transparent;
+    font-size: 0.9rem;
+    transition: color .15s ease, opacity .15s ease;
 }
 
 .tab svg {
@@ -54,11 +228,35 @@ body {
     height: 22px;
 }
 
-.tab.active,
-.tab[aria-current="page"] {
-    color: #ffffff;
+.tab.active {
+    color: #eef2ff;
 }
 
-.tab:active {
-    transform: translateY(1px);
+.tab:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: -2px;
+    border-radius: 10px;
 }
+
+/* ==========================================================================
+   Специфічні дрібниці для сторінок (опційно)
+   ========================================================================== */
+
+/* Прев’ю підписуваного повідомлення у wallet.html (якщо використовується) */
+.preview {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preview pre {
+    margin: 6px 0 0;
+    white-space: pre-wrap;
+}
+
+/* Стани */
+.ok   { color: var(--ok); }
+.warn { color: var(--warn); }
+.err  { color: var(--err); }
