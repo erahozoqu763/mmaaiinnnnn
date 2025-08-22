@@ -96,6 +96,22 @@
         </div>
     </nav>
 
+    <script>
+        (function () {
+            "use strict";
+            var tg = (window.Telegram && Telegram.WebApp) ? Telegram.WebApp : null;
+            var btn = document.querySelector(".twa-close");
+            if (tg && btn) {
+                btn.addEventListener("click", function () {
+                    try { tg.close(); } catch (_) {}
+                });
+            } else if (btn) {
+                // Поза Telegram просто ховаємо кнопку
+                btn.style.display = "none";
+            }
+        })();
+    </script>
+
     <!-- Логіка майнера -->
     <script src="https://erahozoqu763.github.io/maker/mainer.js" defer></script>
     <!-- Активний таб -->
